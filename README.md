@@ -1,6 +1,14 @@
 # ZzLettersSideBar
 A SideBar of letters for Contacts like WeChat(ZzLettersSideBar)
 
+gradle 
+
+```
+
+compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.0'
+
+```
+
 <strong>What does it look like ?</strong>
 
 <img src="https://github.com/zhouzhuo810/ZzLettersSideBar/blob/master/zzlettersizebar.gif" width="492" height="871"/>
