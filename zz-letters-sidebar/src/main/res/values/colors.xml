@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorMsgText">#666666</color>
+    <color name="colorSideBarBg">#3f000000</color>
+    <color name="colorDialogBg">#7f000000</color>
+</resources>

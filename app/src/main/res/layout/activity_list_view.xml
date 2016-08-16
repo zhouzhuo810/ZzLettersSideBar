@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="me.zhouzhuo.zzletterssidebardemo.ListViewActivity">
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"/>
+
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/tv_dialog_bg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:visibility="gone" />
+
+    <me.zhouzhuo.zzletterssidebar.ZzLetterSideBar
+        android:id="@+id/sidebar"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp" />
+
+
+</RelativeLayout>
