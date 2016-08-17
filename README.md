@@ -5,7 +5,7 @@ gradle
 
 ```
 
-compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.0'
+compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.1'
 
 ```
 
@@ -16,6 +16,7 @@ compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.0'
 <strong>How to use it ?</strong>
 
 Step 1. main layout
+for ListView
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,6 +51,43 @@ Step 1. main layout
   
 ```
 
+For RecyclerView
+```xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <me.zhouzhuo.zzletterssidebar.widget.ZzRecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_dialog"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/tv_dialog_bg"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:visibility="gone" />
+
+    <me.zhouzhuo.zzletterssidebar.ZzLetterSideBar
+        android:id="@+id/sidebar"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp" />
+
+</RelativeLayout>
+
+```
+
 step 2.your java bean must extends SortModel
 and you should add @Letter anotation to the field for sortting.
 ```java
@@ -71,7 +109,7 @@ public class PersonEntity extends SortModel {
 }
 ```
 
-step 3. the layout of listview item must add a TextView with id "@id/tv_letter"
+step 3. the layout of listview item or recyclerview item must add a TextView with id "@id/tv_letter"
 
 ```xml
     <TextView
@@ -87,7 +125,9 @@ step 3. the layout of listview item must add a TextView with id "@id/tv_letter"
 
 ```
 
-step 4. your adapter of listview must extends BaseSortAdapter
+step 4. 
+for ListView
+your adapter of listview must extends BaseSortListViewAdapter
 and your ViewHolder must extends BaseViewHolder.
 
 ```java
@@ -124,8 +164,117 @@ public class PersonListAdapter extends BaseSortAdapter<PersonEntity, PersonListA
 }
 ```
 
+for RecyclerView
+your adapter of recyclerview must extends BaseSortRecyclerViewAdapter
+and your ViewHolder must extends BaseRecyclerViewHolder.
+```java
+
+package me.zhouzhuo.zzletterssidebardemo.adapter;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
+
+import java.util.List;
+
+import me.zhouzhuo.zzletterssidebar.adapter.BaseSortRecyclerViewAdapter;
+import me.zhouzhuo.zzletterssidebar.viewholder.BaseRecyclerViewHolder;
+import me.zhouzhuo.zzletterssidebardemo.R;
+import me.zhouzhuo.zzletterssidebardemo.entity.PersonEntity;
+
+/**
+ * Created by zz on 2016/8/17.
+ */
+public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<PersonEntity, BaseRecyclerViewHolder> {
+
+    public PersonRecyclerViewAdapter(Context ctx, List<PersonEntity> mDatas) {
+        super(ctx, mDatas);
+    }
+
+    //return your itemView layoutRes id
+    @Override
+    public int getItemLayoutId() {
+        return R.layout.list_item;
+    }
+
+    //add a header ,optional, if no need, return 0
+    @Override
+    public int getHeaderLayoutId() {
+        return R.layout.list_item_head;
+    }
+
+    //add a footer, optional, if no need, return 0
+    @Override
+    public int getFooterLayoutId() {
+        return R.layout.list_item_foot;
+    }
+
+    @Override
+    public BaseRecyclerViewHolder getViewHolder(View itemView, int type) {
+        switch (type) {
+            case BaseSortRecyclerViewAdapter.TYPE_HEADER:
+                return new HeaderHolder(itemView);
+            case BaseSortRecyclerViewAdapter.TYPE_FOOT:
+                return new FooterHolder(itemView);
+        }
+        return new MyViewHolder(itemView);
+    }
+
+
+    @Override
+    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
+
+        if (holder instanceof MyViewHolder) {
+            //must add this
+            int mPos = position - getHeadViewSize();
+            if (mPos < mDatas.size()) {
+                initLetter(holder, mPos);
+                ((MyViewHolder) holder).tvName.setText(mDatas.get(mPos).getPersonName());
+            }
+        } else if (holder instanceof HeaderHolder) {
+
+        } else if (holder instanceof FooterHolder) {
+            ((FooterHolder) holder).tvFoot.setText(getContentCount() + "位联系人");
+        }
+
+    }
+
+    //custom your ViewHolder here
+    public static class MyViewHolder extends BaseRecyclerViewHolder {
+
+        protected TextView tvName;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            tvName = (TextView) itemView.findViewById(R.id.list_item_tv_name);
+        }
+    }
+
+    public static class HeaderHolder extends BaseRecyclerViewHolder {
+
+        public HeaderHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public static class FooterHolder extends BaseRecyclerViewHolder {
+
+        protected TextView tvFoot;
+
+        public FooterHolder(View itemView) {
+            super(itemView);
+            tvFoot = (TextView) itemView.findViewById(R.id.tv_foot);
+        }
+    }
+
+}
+
+```
+
+
 step 5.add Listener
 
+for ListView
 
 ```java
     private ListView listView;
@@ -143,6 +292,13 @@ step 5.add Listener
 ```
 
 ```java
+
+    private ZzRecyclerView rv;
+    private List<PersonEntity> mDatas;
+    private PersonRecyclerViewAdapter adapter;
+    private ZzLetterSideBar sideBar;
+    private TextView tvDialog;
+
         //设置右侧触摸监听，必须写
         sideBar.setLetterTouchListener(listView, adapter, dialog, new OnLetterTouchListener() {
             @Override
@@ -153,6 +309,49 @@ step 5.add Listener
             public void onActionUp() {
             }
         });
+```
+
+for RecyclerView
+
+
+
+```java
+        //findView
+        tvDialog = (TextView) findViewById(R.id.tv_dialog);
+        sideBar = (ZzLetterSideBar) findViewById(R.id.sidebar);
+        rv = (ZzRecyclerView) findViewById(R.id.rv);
+
+        //set adapter
+        mDatas = new ArrayList<>();
+        adapter = new PersonRecyclerViewAdapter(this, mDatas);
+        rv.setAdapter(adapter);
+
+        //init data
+        String[] personNames = getResources().getStringArray(R.array.persons);
+        List<PersonEntity> personEntities = new ArrayList<>();
+        for (String name : personNames) {
+            PersonEntity entity = new PersonEntity();
+            entity.setPersonName(name);
+            personEntities.add(entity);
+        }
+
+        //update data
+        mDatas = personEntities;
+        adapter.updateRecyclerView(mDatas);
+        adapter.notifyDataSetChanged();
+
+        //set touch event, must add
+        sideBar.setLetterTouchListener(rv, adapter, tvDialog, new OnLetterTouchListener() {
+            @Override
+            public void onLetterTouch(String letter, int position) {
+            }
+
+            @Override
+            public void onActionUp() {
+            }
+        });
+
+
 ```
 
 
