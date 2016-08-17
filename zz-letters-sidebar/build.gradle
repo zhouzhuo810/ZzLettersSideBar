@@ -1,8 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
+/*apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'*/
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+version = "1.0.0"
 
 android {
+    resourcePrefix "zz_" //随意填写
+
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
 
@@ -24,16 +31,110 @@ android {
         checkReleaseBuilds false
     }
 }
+/*
 
 publish {
-    userOrg = 'zhouzhuo'
+    userOrg = 'zhouzhuo810'
     groupId = 'me.zhouzhuo'
     artifactId = 'zz-letters-sidebar'
     publishVersion = '1.0.0'
     desc = 'A SideBar of letters for Contacts like WeChat(ZzLettersSideBar)'
     website = 'https://github.com/zhouzhuo810/ZzLettersSideBar'
 }
+*/
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:recyclerview-v7:24.1.1'
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+group = "me.zhouzhuo.zzletterssidebar"            // Maven Group ID for the artifact，一般填你唯一的包名
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId 'me.zhouzhuo.zzletterssidebar' //自己定义的组名
+            artifactId 'zz-letters-sidebar'
+
+            name 'zz-letters-sidebar'
+            description 'A SideBar of letters for Contacts like WeChat(ZzLettersSideBar)'
+            url 'https://github.com/zhouzhuo810/ZzLettersSideBar'
+            inceptionYear '2016'
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection 'https://github.com/zhouzhuo810/ZzLettersSideBar.git'
+                url 'https://github.com/zhouzhuo810/ZzLettersSideBar'
+
+            }
+            developers {
+                developer {
+                    name 'zhouzhuo'
+                    email 'admin@zhouzhuo.me'
+                }
+            }
+        }
+
+    }
+}
+// Bintray
+
+//获取local.propertes的信息
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    publish = true
+    configurations = ['archives']
+    pkg {
+        //填入 bintray 上对应的 package 信息
+        repo = 'maven'
+        name = 'zz-letters-sidebar'
+        vcsUrl = 'https://github.com/zhouzhuo810/ZzLettersSideBar.git'
+        websiteUrl = 'https://github.com/zhouzhuo810/ZzLettersSideBar'
+        licenses = ['Apache-2.0']
+        issueTrackerUrl = 'https://github.com/zhouzhuo810/ZzLettersSideBar/issues'
+        publicDownloadNumbers = true
+        version {
+            name = '1.0.0'
+            desc = 'zz-letters-sidebar release'
+            vcsTag = '1.0.0'
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task findConventions << {
+    println project.getConvention()
 }

@@ -15,14 +15,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
--dontpreverify
-
--ignorewarnings
-
--keepattributes Signature
-
--keepattributes *Annotation*
-
--dontwarn me.zhouzhuo.zzletterssidebar.**
--keep class me.zhouzhuo.zzletterssidebar.** {*;}

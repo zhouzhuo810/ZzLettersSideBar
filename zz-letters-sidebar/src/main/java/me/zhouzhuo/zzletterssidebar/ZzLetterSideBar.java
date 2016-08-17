@@ -4,14 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import me.zhouzhuo.zzletterssidebar.adapter.BaseSortAdapter;
+import me.zhouzhuo.zzletterssidebar.adapter.BaseSortListViewAdapter;
+import me.zhouzhuo.zzletterssidebar.adapter.BaseSortRecyclerViewAdapter;
 import me.zhouzhuo.zzletterssidebar.interf.OnLetterTouchListener;
+import me.zhouzhuo.zzletterssidebar.widget.ZzRecyclerView;
 
 /**
  * side bar like WeChat
@@ -25,7 +29,9 @@ public class ZzLetterSideBar extends View {
 
     private OnLetterTouchListener letterTouchListener;
     private ListView lv;
-    private BaseSortAdapter adapter;
+    private ZzRecyclerView rv;
+    private BaseSortListViewAdapter adapter;
+    private BaseSortRecyclerViewAdapter rvAdapter;
     private TextView tvDialog;
 
     private float itemHeight = -1;
@@ -112,6 +118,11 @@ public class ZzLetterSideBar extends View {
                     if (adapter != null && lv != null && adapter.getPositionForSection(letters[position].charAt(0)) != -1) {
                         lv.setSelection(adapter.getPositionForSection(letters[position].charAt(0)) + lv.getHeaderViewsCount());
                     }
+                    if (rvAdapter != null && rv != null && rvAdapter.getPositionForSection(letters[position].charAt(0)) != -1) {
+                        int pos = rvAdapter.getPositionForSection(letters[position].charAt(0));
+                        Log.e("POS", pos+"");
+                        rv.getLinearLayoutManager().scrollToPositionWithOffset(pos, 0);
+                    }
                     //make dialog visible
                     if (tvDialog != null) {
                         tvDialog.setVisibility(View.VISIBLE);
@@ -142,9 +153,16 @@ public class ZzLetterSideBar extends View {
     }
 
 
-    public void setLetterTouchListener(ListView lv, BaseSortAdapter adapter, TextView tvDialog, OnLetterTouchListener letterTouchListener) {
+    public void setLetterTouchListener(ListView lv, BaseSortListViewAdapter adapter, TextView tvDialog, OnLetterTouchListener letterTouchListener) {
         this.lv = lv;
         this.adapter = adapter;
+        this.tvDialog = tvDialog;
+        this.letterTouchListener = letterTouchListener;
+    }
+
+    public void setLetterTouchListener(ZzRecyclerView rv, BaseSortRecyclerViewAdapter adapter, TextView tvDialog, OnLetterTouchListener letterTouchListener) {
+        this.rv = rv;
+        this.rvAdapter = adapter;
         this.tvDialog = tvDialog;
         this.letterTouchListener = letterTouchListener;
     }
