@@ -16,7 +16,9 @@ compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.1'
 <strong>How to use it ?</strong>
 
 Step 1. main layout
-for ListView
+
+For ListView
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -126,7 +128,7 @@ step 3. the layout of listview item or recyclerview item must add a TextView wit
 ```
 
 step 4. 
-for ListView
+For ListView
 your adapter of listview must extends BaseSortListViewAdapter
 and your ViewHolder must extends BaseViewHolder.
 
@@ -164,7 +166,7 @@ public class PersonListAdapter extends BaseSortAdapter<PersonEntity, PersonListA
 }
 ```
 
-for RecyclerView
+For RecyclerView
 your adapter of recyclerview must extends BaseSortRecyclerViewAdapter
 and your ViewHolder must extends BaseRecyclerViewHolder.
 ```java
@@ -274,7 +276,7 @@ public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<Perso
 
 step 5.add Listener
 
-for ListView
+For ListView
 
 ```java
     private ListView listView;
@@ -311,7 +313,7 @@ for ListView
         });
 ```
 
-for RecyclerView
+For RecyclerView
 
 
 
