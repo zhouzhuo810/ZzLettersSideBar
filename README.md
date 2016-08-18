@@ -53,7 +53,7 @@ For ListView
   
 ```
 
-For RecyclerView
+For RecyclerView (It is recommended to use ZzRecyclerView)
 ```xml
 
 <?xml version="1.0" encoding="utf-8"?>
