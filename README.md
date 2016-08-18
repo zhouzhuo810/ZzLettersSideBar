@@ -5,7 +5,7 @@ gradle
 
 ```
 
-compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.1'
+compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.2'
 
 ```
 
