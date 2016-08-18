@@ -172,22 +172,6 @@ your adapter of recyclerview must extends BaseSortRecyclerViewAdapter
 and your ViewHolder must extends BaseRecyclerViewHolder.
 ```java
 
-package me.zhouzhuo.zzletterssidebardemo.adapter;
-
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
-
-import java.util.List;
-
-import me.zhouzhuo.zzletterssidebar.adapter.BaseSortRecyclerViewAdapter;
-import me.zhouzhuo.zzletterssidebar.viewholder.BaseRecyclerViewHolder;
-import me.zhouzhuo.zzletterssidebardemo.R;
-import me.zhouzhuo.zzletterssidebardemo.entity.PersonEntity;
-
-/**
- * Created by zz on 2016/8/17.
- */
 public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<PersonEntity, BaseRecyclerViewHolder> {
 
     public PersonRecyclerViewAdapter(Context ctx, List<PersonEntity> mDatas) {
@@ -223,16 +207,17 @@ public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<Perso
         return new MyViewHolder(itemView);
     }
 
-
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseRecyclerViewHolder holder, final int position) {
 
         if (holder instanceof MyViewHolder) {
             //must add this
-            int mPos = position - getHeadViewSize();
+            final int mPos = position - getHeadViewSize();
             if (mPos < mDatas.size()) {
                 initLetter(holder, mPos);
                 ((MyViewHolder) holder).tvName.setText(mDatas.get(mPos).getPersonName());
+                //add click event optional
+                initClickListener(holder, mPos);
             }
         } else if (holder instanceof HeaderHolder) {
 
@@ -352,6 +337,13 @@ For RecyclerView
         //set adapter
         mDatas = new ArrayList<>();
         adapter = new PersonRecyclerViewAdapter(this, mDatas);
+        //set click event, optional
+        adapter.setRecyclerViewClickListener(new BaseSortRecyclerViewAdapter.OnRecyclerViewClickListener() {
+            @Override
+            public void onClick(View itemView, int pos) {
+                Toast.makeText(RecyclerViewActivity.this, mDatas.get(pos).getPersonName(), Toast.LENGTH_SHORT).show();
+            }
+        });
         rv.setAdapter(adapter);
 
         //init data
@@ -378,6 +370,7 @@ For RecyclerView
             public void onActionUp() {
             }
         });
+
 
 
 ```
