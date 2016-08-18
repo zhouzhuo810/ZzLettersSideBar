@@ -136,9 +136,9 @@ and your ViewHolder must extends BaseViewHolder.
 /**
  * Created by zz on 2016/8/15.
  */
-public class PersonListAdapter extends BaseSortAdapter<PersonEntity, PersonListAdapter.ViewHolder> {
+public class PersonListViewAdapter extends BaseSortListViewAdapter<PersonEntity, PersonListViewAdapter.ViewHolder> {
 
-    public PersonListAdapter(Context ctx, List<PersonEntity> datas) {
+    public PersonListViewAdapter(Context ctx, List<PersonEntity> datas) {
         super(ctx, datas);
     }
 
@@ -164,6 +164,7 @@ public class PersonListAdapter extends BaseSortAdapter<PersonEntity, PersonListA
     }
 
 }
+
 ```
 
 For RecyclerView
@@ -282,26 +283,44 @@ For ListView
     private ListView listView;
     private ZzLetterSideBar sideBar;
     private TextView dialog;
-    private PersonListAdapter adapter;
+    private PersonListViewAdapter adapter;
     private List<PersonEntity> mDatas;
 
         sideBar = (ZzLetterSideBar) findViewById(R.id.sidebar);
         dialog = (TextView) findViewById(R.id.tv_dialog);
         listView = (ListView) findViewById(R.id.list_view);
+
+        //optional
+        View header = LayoutInflater.from(this).inflate(R.layout.list_item_head, null);
+        listView.addHeaderView(header);
+
+        //optional
+        View footer = LayoutInflater.from(this).inflate(R.layout.list_item_foot, null);
+        tvFoot = (TextView) footer.findViewById(R.id.tv_foot);
+        listView.addFooterView(footer);
+
+        //set adapter
         mDatas = new ArrayList<>();
-        adapter = new PersonListAdapter(this, mDatas);
+        adapter = new PersonListViewAdapter(this, mDatas);
         listView.setAdapter(adapter);
+        
+        //init data
+        String[] personNames = getResources().getStringArray(R.array.persons);
+        List<PersonEntity> personEntities = new ArrayList<>();
+        for (String name : personNames) {
+            PersonEntity entity = new PersonEntity();
+            entity.setPersonName(name);
+            personEntities.add(entity);
+        }
+
+        //update data
+        mDatas = personEntities;
+        adapter.updateListView(mDatas);
+        tvFoot.setText(mDatas.size() + "位联系人");
 ```
 
 ```java
-
-    private ZzRecyclerView rv;
-    private List<PersonEntity> mDatas;
-    private PersonRecyclerViewAdapter adapter;
-    private ZzLetterSideBar sideBar;
-    private TextView tvDialog;
-
-        //设置右侧触摸监听，必须写
+        //设置右侧触摸监听
         sideBar.setLetterTouchListener(listView, adapter, dialog, new OnLetterTouchListener() {
             @Override
             public void onLetterTouch(String letter, int position) {
@@ -318,6 +337,13 @@ For RecyclerView
 
 
 ```java
+    private ZzRecyclerView rv;
+    private List<PersonEntity> mDatas;
+    private PersonRecyclerViewAdapter adapter;
+    private ZzLetterSideBar sideBar;
+    private TextView tvDialog;
+
+
         //findView
         tvDialog = (TextView) findViewById(R.id.tv_dialog);
         sideBar = (ZzLetterSideBar) findViewById(R.id.sidebar);
