@@ -5,11 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.zhouzhuo.zzletterssidebar.ZzLetterSideBar;
+import me.zhouzhuo.zzletterssidebar.adapter.BaseSortRecyclerViewAdapter;
 import me.zhouzhuo.zzletterssidebar.interf.OnLetterTouchListener;
 import me.zhouzhuo.zzletterssidebar.widget.ZzRecyclerView;
 import me.zhouzhuo.zzletterssidebardemo.adapter.PersonRecyclerViewAdapter;
@@ -39,6 +41,13 @@ public class RecyclerViewActivity extends AppCompatActivity {
         //set adapter
         mDatas = new ArrayList<>();
         adapter = new PersonRecyclerViewAdapter(this, mDatas);
+        //set click event, optional
+        adapter.setRecyclerViewClickListener(new BaseSortRecyclerViewAdapter.OnRecyclerViewClickListener() {
+            @Override
+            public void onClick(View itemView, int pos) {
+                Toast.makeText(RecyclerViewActivity.this, mDatas.get(pos).getPersonName(), Toast.LENGTH_SHORT).show();
+            }
+        });
         rv.setAdapter(adapter);
 
         //init data

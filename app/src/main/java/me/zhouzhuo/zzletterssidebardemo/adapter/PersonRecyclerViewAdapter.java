@@ -49,16 +49,17 @@ public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<Perso
         return new MyViewHolder(itemView);
     }
 
-
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseRecyclerViewHolder holder, final int position) {
 
         if (holder instanceof MyViewHolder) {
             //must add this
-            int mPos = position - getHeadViewSize();
+            final int mPos = position - getHeadViewSize();
             if (mPos < mDatas.size()) {
                 initLetter(holder, mPos);
                 ((MyViewHolder) holder).tvName.setText(mDatas.get(mPos).getPersonName());
+                //add click event optional
+                initClickListener(holder, mPos);
             }
         } else if (holder instanceof HeaderHolder) {
 

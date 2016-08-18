@@ -23,7 +23,6 @@ public class ZzRecyclerView extends RecyclerView {
         this.initRecyclerView(context);
     }
 
-
     public ZzRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.initRecyclerView(context);
@@ -46,7 +45,6 @@ public class ZzRecyclerView extends RecyclerView {
     public LinearLayoutManager getLinearLayoutManager() {
         return mLinearLayoutManager;
     }
-
 
     public void setLinearLayoutManager(LinearLayoutManager linearLayoutManager) {
         mLinearLayoutManager = linearLayoutManager;

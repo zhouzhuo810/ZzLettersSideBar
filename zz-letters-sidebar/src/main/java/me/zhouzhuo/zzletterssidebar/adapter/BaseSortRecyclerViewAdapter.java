@@ -33,6 +33,8 @@ public abstract class BaseSortRecyclerViewAdapter<T extends SortModel, K extends
     public CharacterParser characterParser;
     public PinyinComparator pinyinComparator;
 
+    protected OnRecyclerViewClickListener clickListener;
+
     public BaseSortRecyclerViewAdapter(Context ctx, List<T> mDatas) {
         inflater = LayoutInflater.from(ctx);
         this.mDatas = mDatas;
@@ -40,6 +42,11 @@ public abstract class BaseSortRecyclerViewAdapter<T extends SortModel, K extends
         pinyinComparator = new PinyinComparator();
         generateLetters();
         addHeaderAndFooter();
+    }
+
+    //set click event
+    public void setRecyclerViewClickListener(OnRecyclerViewClickListener listener) {
+        this.clickListener = listener;
     }
 
     private void addHeaderAndFooter() {
@@ -173,7 +180,6 @@ public abstract class BaseSortRecyclerViewAdapter<T extends SortModel, K extends
         if (headViewSize == 1 && position == 0) {
             type = TYPE_HEADER;
         } else if (footViewSize == 1 && position == getItemCount() - 1) {
-            //最后一个位置
             type = TYPE_FOOT;
         }
         return type;
@@ -196,4 +202,21 @@ public abstract class BaseSortRecyclerViewAdapter<T extends SortModel, K extends
     public int getHeadViewSize() {
         return headViewSize;
     }
+
+
+    public interface OnRecyclerViewClickListener {
+        void onClick(View itemView, int pos);
+    }
+
+    public void initClickListener(final BaseRecyclerViewHolder holder, final int mPos) {
+        holder.rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) {
+                    clickListener.onClick(holder.rootView, mPos);
+                }
+            }
+        });
+    }
+
 }

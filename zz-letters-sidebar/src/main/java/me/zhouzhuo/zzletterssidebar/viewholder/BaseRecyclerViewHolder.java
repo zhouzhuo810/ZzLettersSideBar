@@ -12,9 +12,12 @@ import me.zhouzhuo.zzletterssidebar.R;
 public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
 
     public TextView tvLetter;
+    public View rootView;
 
     public BaseRecyclerViewHolder(View itemView) {
         super(itemView);
+        rootView = itemView;
         tvLetter = (TextView) itemView.findViewById(R.id.tv_letter);
     }
+
 }
