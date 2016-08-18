@@ -1,5 +1,6 @@
 # ZzLettersSideBar
 A SideBar of letters for Contacts like WeChat(ZzLettersSideBar)
+
 高仿微信联系人列表字母导航栏效果。
 
 gradle 
@@ -17,6 +18,7 @@ compile 'me.zhouzhuo.zzletterssidebar:zz-letters-sidebar:1.0.2'
 <strong>How to use it ?</strong>
 
 Step 1. main layout 
+
 (第一步，Activity或Fragment布局示例)
 
 For ListView
@@ -94,6 +96,7 @@ For RecyclerView (It is recommended to use ZzRecyclerView)
 
 step 2.your java bean must extends SortModel
 and you should add @Letter anotation to the field for sortting.
+
 (第二步，你的实体类必须继承SortModel类，实体类中用来排序的属性必须添加@Letter(isSortField = true)注解)
 ```java
 /**
@@ -115,6 +118,7 @@ public class PersonEntity extends SortModel {
 ```
 
 step 3. the layout of listview item or recyclerview item must add a TextView with id "@id/tv_letter"
+
 (第三步，ListView或RecyclerView的item的布局中必须添加一个显示分组字母的TextView，并且id必须使用@id/tv_letter)
 
 ```xml
@@ -133,8 +137,10 @@ step 3. the layout of listview item or recyclerview item must add a TextView wit
 
 step 4. 
 For ListView
+
 your adapter of listview must extends BaseSortListViewAdapter
 and your ViewHolder must extends BaseViewHolder.
+
 （第四步，对于ListView， Adapter必须继承BaseSortListViewAdapter，
 而ViewHolder必须继承BaseViewHolder）
 
@@ -176,6 +182,7 @@ public class PersonListViewAdapter extends BaseSortListViewAdapter<PersonEntity,
 For RecyclerView
 your adapter of recyclerview must extends BaseSortRecyclerViewAdapter
 and your ViewHolder must extends BaseRecyclerViewHolder.
+
 (对于RecyclerView，Adapter必须继承BaseSortRecyclerViewAdapter，
 而ViewHolder必须继承BaseRecyclerViewHolder)
 ```java
@@ -269,7 +276,9 @@ public class PersonRecyclerViewAdapter extends BaseSortRecyclerViewAdapter<Perso
 
 
 step 5.add Listener
+
 (第五步，添加监听事件)
+
 For ListView
 
 ```java
